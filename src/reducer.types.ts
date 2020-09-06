@@ -1,7 +1,7 @@
-import { CleanedUpForecastData } from "./weatherapi.types";
+import { CleanedUpForecastData, SkyTypes } from "./weatherapi.types";
 
 export type Store = {
-  currentSkies: string;
+  currentSkies: SkyTypes;
   currentTemp: number;
   submittedCity: string;
   forecast: CleanedUpForecastData;
@@ -13,7 +13,7 @@ export type ActionObject =
   | {
       type: "dataRetrievalSuccessful";
       currentTemp: number;
-      currentSkies: string;
+      currentSkies: SkyTypes;
       forecast: CleanedUpForecastData;
     }
   | {

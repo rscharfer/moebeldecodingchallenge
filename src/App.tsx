@@ -2,6 +2,8 @@ import React, { useReducer, useEffect } from "react";
 import axios from "axios";
 
 import GlobalStyle from "./GlobalStyle";
+import Header from "./Header";
+import CurrentConditions from "./CurrentConditions";
 import InputContainer from "./InputContainer";
 import List from "./List";
 
@@ -67,7 +69,13 @@ function App() {
   return (
     <>
       <GlobalStyle bgColor={getBackgroundColor(store.currentTemp)} />
+      <Header text="whatweather?" />
       <InputContainer selectCity={submitCity} />
+      <CurrentConditions
+        temp={store.currentTemp}
+        skies={store.currentSkies}
+        selectedCity={store.submittedCity}
+      />
       <List forecast={store.forecast} />
       <header>
         {/* <img src={logo} className="App-logo" alt="logo" /> */}

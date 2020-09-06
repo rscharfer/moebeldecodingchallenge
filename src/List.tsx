@@ -1,6 +1,7 @@
 import React from "react";
-
 import { CleanedUpForecastData } from "./weatherapi.types";
+
+
 
 type ListProps = {
   forecast: CleanedUpForecastData;

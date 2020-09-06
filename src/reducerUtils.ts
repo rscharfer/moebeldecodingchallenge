@@ -1,7 +1,7 @@
 import { Store, ActionObject } from "./reducer.types";
 
 export const INIT_STATE: Store = {
-  currentSkies: "cloudy",
+  currentSkies: "Clouds",
   currentTemp: 15,
   submittedCity: "",
   forecast: [
