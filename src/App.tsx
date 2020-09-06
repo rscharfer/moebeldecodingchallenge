@@ -1,23 +1,20 @@
 import React, { useReducer, useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 import GlobalStyle from "./GlobalStyle";
+import InputContainer from "./InputContainer";
+import List from "./List";
 
 import {
   cleanUpCurrentWeatherData,
   cleanUpForecastData,
   createCurrentWeatherUrl,
-  createForcastUrl
-} from './weaterUtils'
+  createForcastUrl,
+} from "./weatherUtils";
 
-import {
-  INIT_STATE,
-  reducer
-} from './reducerUtils'
+import { INIT_STATE, reducer } from "./reducerUtils";
 
 import { ORANGE, TEAL } from "./colors";
-
-
 
 function App() {
   const [store, dispatch] = useReducer(reducer, INIT_STATE);
@@ -25,29 +22,43 @@ function App() {
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
+  const submitCity: (city: string) => void = (city) =>
+    dispatch({
+      type: "submittedCitySet",
+      submittedCity: city,
+    });
+
   useEffect(() => {
-    async function fetchData(){
-      try {
-        const currentProm = axios.get(createCurrentWeatherUrl(store.submittedCity));
-        const forecastProm = axios.get(createForcastUrl(store.submittedCity));
+    async function fetchData() {
+      if (store.submittedCity) {
+        console.log("effect run");
+        try {
+          const currentProm = axios.get(
+            createCurrentWeatherUrl(store.submittedCity)
+          );
 
-        // const timeLimit = () => new Promise((res, rej) => setTimeout(rej, 3000))
-        const [current, forecast] = await Promise.all([currentProm, forecastProm, ])
+          const forecastProm = axios.get(createForcastUrl(store.submittedCity));
 
-        const { temp, skies } = cleanUpCurrentWeatherData(current.data);
-        const forecastData = cleanUpForecastData(forecast.data);
-       
-        dispatch({
-          type: 'dataRetrievalSuccessful',
-          currentTemp: temp,
-          currentSkies: skies,
-          forecast: forecastData
-        })
-      }
-      catch(e){
-        dispatch({
-          type: 'dataRetrievalFailed',
-        })
+          // const timeLimit = () => new Promise((res, rej) => setTimeout(rej, 3000))
+          const [current, forecast] = await Promise.all([
+            currentProm,
+            forecastProm,
+          ]);
+          const { temp, skies } = cleanUpCurrentWeatherData(current.data);
+          console.log("check", temp, skies);
+          const forecastData = cleanUpForecastData(forecast.data);
+
+          dispatch({
+            type: "dataRetrievalSuccessful",
+            currentTemp: temp,
+            currentSkies: skies,
+            forecast: forecastData,
+          });
+        } catch (e) {
+          dispatch({
+            type: "dataRetrievalFailed",
+          });
+        }
       }
     }
     fetchData();
@@ -56,6 +67,8 @@ function App() {
   return (
     <>
       <GlobalStyle bgColor={getBackgroundColor(store.currentTemp)} />
+      <InputContainer selectCity={submitCity} />
+      <List forecast={store.forecast} />
       <header>
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
       </header>

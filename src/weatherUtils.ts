@@ -41,3 +41,10 @@ export const cleanUpForecastData = (obj: OpenWeatherMapForecastData) : CleanedUp
 
 export const createCurrentWeatherUrl = (submittedCity : string) => `https://api.openweathermap.org/data/2.5/weather?q=${submittedCity}&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`
 export const createForcastUrl = (submittedCity : string) => `https://api.openweathermap.org/data/2.5/forecast/daily?q=${submittedCity}&cnt=6&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`
+
+
+
+export default {
+  cleanUpCurrentWeatherData,
+  cleanUpForecastData
+}
