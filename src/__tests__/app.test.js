@@ -4,10 +4,10 @@ import userEvent from "@testing-library/user-event";
 
 import axios from "axios";
 
-import { ORANGE, TEAL } from "../colors.js";
+import { ORANGE, TEAL } from "../constants/colors.js";
 
-import App from "../App";
-import InputContainer from "../InputContainer";
+import App from "../components/App";
+import InputContainer from "../components/InputContainer";
 
 
 

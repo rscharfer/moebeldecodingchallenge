@@ -12,28 +12,37 @@ import {
   cleanUpForecastData,
   createCurrentWeatherUrl,
   createForcastUrl,
-} from "./weatherUtils";
+} from "../utils/weatherUtils";
 
-import { INIT_STATE, reducer } from "./reducerUtils";
+import { INIT_STATE, reducer } from "../utils/reducerUtils";
+import { ORANGE, TEAL } from "../constants/colors";
 
-import { ORANGE, TEAL } from "./colors";
+import useHasMounted from "../hooks/useHasMounted";
 
 function App() {
   const [store, dispatch] = useReducer(reducer, INIT_STATE);
+  const hasMounted = useHasMounted();
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
-  const submitCity: (city: string) => void = (city) =>
+  const selectCityHandler: (city: string) => void = (city) =>
     dispatch({
       type: "submittedCitySet",
       submittedCity: city,
     });
 
+  const inputFocusHandler = () => {
+    console.log("input focussed!");
+  };
+
+  const inputBlurHandler = () => {
+    console.log("input blurred!");
+  };
+
   useEffect(() => {
     async function fetchData() {
-      if (store.submittedCity) {
-        console.log("effect run");
+      if (hasMounted) {
         try {
           const currentProm = axios.get(
             createCurrentWeatherUrl(store.submittedCity)
@@ -47,7 +56,6 @@ function App() {
             forecastProm,
           ]);
           const { temp, skies } = cleanUpCurrentWeatherData(current.data);
-          console.log("check", temp, skies);
           const forecastData = cleanUpForecastData(forecast.data);
 
           dispatch({
@@ -64,23 +72,27 @@ function App() {
       }
     }
     fetchData();
-  }, [store.submittedCity]);
+  }, [hasMounted, store.submittedCity]);
+
+  const { currentTemp, currentSkies, submittedCity, forecast } = store;
 
   return (
     <>
-      <GlobalStyle bgColor={getBackgroundColor(store.currentTemp)} />
+      <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
       <Header text="whatweather?" />
-      <InputContainer selectCity={submitCity} />
-      <CurrentConditions
-        temp={store.currentTemp}
-        skies={store.currentSkies}
-        selectedCity={store.submittedCity}
+      <InputContainer
+        labelText="Type in your location and we will tell you what weather to expect"
+        selectCity={selectCityHandler}
+        blurHandler={inputBlurHandler}
+        focusHandler={inputFocusHandler}
+        className=""
       />
-      <List forecast={store.forecast} />
-      <header>
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-      </header>
-      <div>something else</div>
+      <CurrentConditions
+        temp={currentTemp}
+        skies={currentSkies}
+        selectedCity={submittedCity}
+      />
+      <List forecast={forecast} />
     </>
   );
 }

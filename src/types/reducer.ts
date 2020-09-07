@@ -1,4 +1,4 @@
-import { CleanedUpForecastData, SkyTypes } from "./weatherapi.types";
+import { CleanedUpForecastData, SkyTypes } from "./weatherapi";
 
 export type Store = {
   currentSkies: SkyTypes;

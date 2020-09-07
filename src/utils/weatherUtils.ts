@@ -2,7 +2,7 @@ import {
   OpenWeatherMapCurrentData,
   CleanedUpCurrentData,
   OpenWeatherMapForecastData, 
-  CleanedUpForecastData } from './weatherapi.types'
+  CleanedUpForecastData } from '../types/weatherapi'
 
 export const cleanUpCurrentWeatherData = (obj : OpenWeatherMapCurrentData) : CleanedUpCurrentData => {
   const temp = obj.main.temp

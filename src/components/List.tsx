@@ -1,5 +1,5 @@
 import React from "react";
-import { CleanedUpForecastData } from "./weatherapi.types";
+import { CleanedUpForecastData } from "../types/weatherapi";
 
 
 

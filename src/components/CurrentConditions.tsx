@@ -1,11 +1,11 @@
 import React from "react";
 
-import { SkyTypes } from './weatherapi.types'
+import { SkyTypes } from "../types/weatherapi";
 
-import { ReactComponent as Clear } from "./clear.svg";
-import { ReactComponent as Cloudy } from "./cloudy.svg";
-import { ReactComponent as Rain } from "./rain.svg";
-import { ReactComponent as Degree } from "./degree.svg";
+import { ReactComponent as Clear } from "../svgs/clear.svg";
+import { ReactComponent as Cloudy } from "../svgs/cloudy.svg";
+import { ReactComponent as Rain } from "../svgs/rain.svg";
+import { ReactComponent as Degree } from "../svgs/degree.svg";
 
 type CurrentConditionsProps = {
   temp: number;
@@ -25,7 +25,8 @@ const CurrentConditions = ({
   skies,
 }: CurrentConditionsProps) => {
   const SkyComponent = skiesMap[skies];
-  console.log("sc", skies);
+
+
   return (
     <>
       {selectedCity}
