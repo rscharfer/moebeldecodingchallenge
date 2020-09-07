@@ -1,20 +1,15 @@
 import React, { useReducer, useEffect } from "react";
-import axios from "axios";
 
 import GlobalStyle from "./GlobalStyle";
 import Header from "./Header";
 import CurrentConditions from "./CurrentConditions";
 import InputContainer from "./InputContainer";
 import List from "./List";
+import ErrorMessage from "./Error";
 
 import { ActionTypes, ActionObject } from "../types/reducer";
 
-import {
-  cleanUpCurrentWeatherData,
-  cleanUpForecastData,
-  createCurrentWeatherUrl,
-  createForcastUrl,
-} from "../utils/weatherUtils";
+import { getCurrentWeatherData, getForecastData } from "../utils/weatherUtils";
 
 import { INIT_STATE, reducer } from "../utils/reducerUtils";
 import { ORANGE, TEAL } from "../constants/colors";
@@ -58,36 +53,31 @@ function App() {
       if (store.submittedCity !== "Fake City, USA") {
         try {
           sendRetrievalAction({ status: "retrievingData" });
-          const currentProm = axios.get(
-            createCurrentWeatherUrl(store.submittedCity)
-          );
-          const forecastProm = axios.get(createForcastUrl(store.submittedCity));
 
           // const timeLimit = () => new Promise((res, rej) => setTimeout(rej, 3000))
           const [current, forecast] = await Promise.all([
-            currentProm,
-            forecastProm,
+            getCurrentWeatherData(store.submittedCity),
+            getForecastData(store.submittedCity),
           ]);
-          const { temp, skies } = cleanUpCurrentWeatherData(current.data);
-          const forecastData = cleanUpForecastData(forecast.data);
-
-          console.log(forecastData);
 
           dispatch({
             type: "dataRetrievalSuccessful",
-            currentTemp: temp,
-            currentSkies: skies,
-            forecast: forecastData,
+            currentTemp: current.temp,
+            currentSkies: current.skies,
+            forecast,
           });
         } catch (e) {
           dispatch({
             type: "dataRetrievalFailed",
+            message: e.message,
           });
         }
       }
     }
     fetchData();
-  }, [sendRetrievalAction, store.submittedCity]);
+    // I do not want to make sendRetrievalAction a dependency
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.submittedCity]);
 
   const { currentTemp, currentSkies, submittedCity, forecast } = store;
 
@@ -108,6 +98,9 @@ function App() {
         selectedCity={submittedCity}
       />
       <List forecast={forecast} />
+      {store.hasError && (
+        <ErrorMessage message={store.errorMessage} className="" />
+      )}
     </>
   );
 }

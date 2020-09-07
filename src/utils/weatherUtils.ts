@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import {
   OpenWeatherMapCurrentData,
   CleanedUpCurrentData,
@@ -15,9 +17,7 @@ export const skiesMap = {
   Rain: Rain,
 };
 
-
-
-export const cleanUpCurrentWeatherData = (
+const cleanUpCurrentWeatherData = (
   obj: OpenWeatherMapCurrentData
 ): CleanedUpCurrentData => {
   const temp = obj.main.temp;
@@ -40,7 +40,7 @@ const dayMapper: {
   6: "Saturday",
 };
 
-export const cleanUpForecastData = (
+const cleanUpForecastData = (
   obj: OpenWeatherMapForecastData
 ): CleanedUpForecastData => {
   return obj.list
@@ -57,12 +57,22 @@ export const cleanUpForecastData = (
     .slice(1);
 };
 
-export const createCurrentWeatherUrl = (submittedCity: string) =>
+const createCurrentWeatherUrl = (submittedCity: string) =>
   `https://api.openweathermap.org/data/2.5/weather?q=${submittedCity}&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`;
-export const createForcastUrl = (submittedCity: string) =>
+const createForcastUrl = (submittedCity: string) =>
   `https://api.openweathermap.org/data/2.5/forecast/daily?q=${submittedCity}&cnt=6&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`;
 
+export const getForecastData = async (city: string) => {
+  const { data } = await axios.get(createForcastUrl(city));
+  return cleanUpForecastData(data);
+};
+
+export const getCurrentWeatherData = async (city: string) => {
+  const { data } = await axios.get(createCurrentWeatherUrl(city));
+  return cleanUpCurrentWeatherData(data);
+};
+
 export default {
-  cleanUpCurrentWeatherData,
-  cleanUpForecastData,
+  getForecastData,
+  getCurrentWeatherData,
 };

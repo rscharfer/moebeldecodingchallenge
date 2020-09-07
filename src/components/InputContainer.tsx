@@ -36,6 +36,10 @@ const StyledSubmit = styled(RightArrow)`
   right: 4rem;
   top: 2rem;
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    right: 2rem;
+  }
 `;
 
 const StyledLabel = styled.label`

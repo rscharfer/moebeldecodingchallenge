@@ -7,6 +7,7 @@ export type Store = {
   forecast: CleanedUpForecastData;
   weatherRetrievalStatus: RetrievalTypes;
   hasError: boolean;
+  errorMessage: string;
 };
 
 export type ActionObject =
@@ -18,6 +19,7 @@ export type ActionObject =
     }
   | {
       type: "dataRetrievalFailed";
+      message: string
     }
   | {
       type: "submittedCitySet";

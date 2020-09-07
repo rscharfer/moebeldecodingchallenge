@@ -13,6 +13,7 @@ export const INIT_STATE: Store = {
   ],
   weatherRetrievalStatus: "idle",
   hasError: false,
+  errorMessage: ''
 };
 
 export const reducer = (state: Store, action: ActionObject): Store => {
@@ -30,11 +31,13 @@ export const reducer = (state: Store, action: ActionObject): Store => {
         forecast: action.forecast,
         weatherRetrievalStatus: "idle",
         hasError: false,
+        errorMessage: '',
       };
     case "dataRetrievalFailed":
       return {
         ...state,
         hasError: true,
+        errorMessage: action.message,
         weatherRetrievalStatus: "idle",
       };
     case "weatherRetrievalStatusChange":
