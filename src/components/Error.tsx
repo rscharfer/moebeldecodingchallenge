@@ -11,8 +11,17 @@ const ErrorMessage = ({ message, className }: ErrorMessageProps) => {
 };
 
 const StyledErrorMessage = styled(ErrorMessage)`
-  color
-  font-size: 64px;
+  text-align: center;
+  color: tomato;
+  background-color: white;
+  border: 3px solid tomato;
+  border-radius: 0.75rem;
+  width: 20%;
+  position: absolute;
+  top: calc(50vh - 2.5rem);
+  left: calc(50vw - 10%);
+  font-size: 2rem;
+  padding: 1rem;
 `;
 
 export default StyledErrorMessage;
