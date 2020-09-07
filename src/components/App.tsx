@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect } from "react";
+import styled from "styled-components";
 
 import GlobalStyle from "./GlobalStyle";
 import Header from "./Header";
@@ -13,8 +14,60 @@ import { getCurrentWeatherData, getForecastData } from "../utils/weatherUtils";
 
 import { INIT_STATE, reducer } from "../utils/reducerUtils";
 import { ORANGE, TEAL } from "../constants/colors";
+import { RetrievalTypes } from "../types/weatherapi";
 
 // import useHasMounted from "../hooks/useHasMounted";
+
+type ModalContainerProps = {
+  weatherRetrievalStatus: RetrievalTypes;
+};
+
+const ModalContainer = styled.div<ModalContainerProps>`
+  position: relative;
+  &::before {
+    position: absolute;
+    top: -1rem;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+    border-radius: 0.25rem;
+    content: "";
+    opacity: 0.55;
+    z-index: 1000;
+    display: ${({ weatherRetrievalStatus }) =>
+      weatherRetrievalStatus === "inputHasFocus" ||
+      weatherRetrievalStatus === "retrievingData"
+        ? "block"
+        : "none"};
+  }
+
+
+  &::after {
+    animation: loading 1s infinite ease-out;
+    position: absolute;
+    top: calc(50% - 3rem);
+    left: calc(50% - 3rem);
+    width: 6rem;
+    height: 6rem;
+    background: radial-gradient(rgba(0, 55, 255, 0), rgba(0, 55, 255, 0.75));
+    border-radius: 50%;
+    content: "";
+    display: ${({ weatherRetrievalStatus }) =>
+      weatherRetrievalStatus === "retrievingData" ? "block" : "none"};
+  }
+
+  @keyframes loading {
+    from {
+      opacity: 1;
+      transform: scale(0.001);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+`;
 
 function App() {
   const [store, dispatch] = useReducer(reducer, INIT_STATE);
@@ -92,12 +145,14 @@ function App() {
         focusHandler={inputFocusHandler}
         className=""
       />
-      <CurrentConditions
-        temp={currentTemp}
-        skies={currentSkies}
-        selectedCity={submittedCity}
-      />
-      <List forecast={forecast} />
+      <ModalContainer weatherRetrievalStatus={store.weatherRetrievalStatus}>
+        <CurrentConditions
+          temp={currentTemp}
+          skies={currentSkies}
+          selectedCity={submittedCity}
+        />
+        <List forecast={forecast} className="" />
+      </ModalContainer>
       {store.hasError && (
         <ErrorMessage message={store.errorMessage} className="" />
       )}

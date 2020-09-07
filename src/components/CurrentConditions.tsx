@@ -12,8 +12,6 @@ type CurrentConditionsProps = {
   skies: SkyTypes;
 };
 
-
-
 const ConditionsWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -59,7 +57,9 @@ const CurrentConditions = ({
 
   return (
     <Wrapper>
-      <SelectedCityWrapper>{selectedCity}</SelectedCityWrapper>
+      <SelectedCityWrapper>
+        Weather for: {selectedCity || "No city given"}
+      </SelectedCityWrapper>
       <ConditionsWrapper>
         <SkyWrapper>
           <SkyComponent height={60} />

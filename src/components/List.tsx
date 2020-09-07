@@ -5,20 +5,6 @@ import { ReactComponent as Degree } from "../svgs/degree.svg";
 
 import { skiesMap } from "../utils/weatherUtils";
 
-const StyledList = styled.ul`
-  margin: 1rem auto;
-  width: 30%;
-  min-width: 300px;
-  font-size: 1.25rem;
-
-  list-style: none;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    margin-right: 7rem;
-    margin-left: -1rem;
-  }
-`;
 
 const StyledListItem = styled.li`
   display: flex;
@@ -53,10 +39,11 @@ const StyledWeatherIcon = styled.span`
 
 type ListProps = {
   forecast: CleanedUpForecastData;
+  className: string;
 };
 
-const List = ({ forecast }: ListProps) => (
-  <StyledList>
+const List = ({ forecast, className }: ListProps) => (
+  <ul className={className}>
     {forecast.map((day) => {
       const WeatherIcon = skiesMap[day.skies];
       return (
@@ -76,7 +63,27 @@ const List = ({ forecast }: ListProps) => (
         </StyledListItem>
       );
     })}
-  </StyledList>
+  </ul>
 );
 
-export default List;
+const StyledList = styled(List)`
+  margin: 1rem auto;
+  width: 30%;
+  min-width: 300px;
+  font-size: 1.25rem;
+  position: relative;
+
+  list-style: none;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    margin-right: 7rem;
+    margin-left: -1rem;
+  }
+`;
+
+export default StyledList;
+
+/**content: ${(props) => {
+      return props.weatherRetrievalStatus === "inputHasFocus" ? "yes" : "";
+    }}; */

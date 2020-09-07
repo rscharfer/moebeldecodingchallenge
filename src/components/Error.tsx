@@ -22,6 +22,12 @@ const StyledErrorMessage = styled(ErrorMessage)`
   left: calc(50vw - 10%);
   font-size: 2rem;
   padding: 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    width: 40%;
+    left: calc(50vw - 20%);
+  }
 `;
 
 export default StyledErrorMessage;
