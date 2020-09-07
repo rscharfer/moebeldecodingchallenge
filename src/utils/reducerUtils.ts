@@ -3,7 +3,7 @@ import { Store, ActionObject } from "../types/reducer";
 export const INIT_STATE: Store = {
   currentSkies: "Clouds",
   currentTemp: 15,
-  submittedCity: "Berlin",
+  submittedCity: "Fake City, USA",
   forecast: [
     {
       day: "Monday",
@@ -28,12 +28,19 @@ export const reducer = (state: Store, action: ActionObject): Store => {
         currentTemp: action.currentTemp,
         currentSkies: action.currentSkies,
         forecast: action.forecast,
+        weatherRetrievalStatus: "idle",
         hasError: false,
       };
     case "dataRetrievalFailed":
       return {
         ...state,
         hasError: true,
+        weatherRetrievalStatus: "idle",
+      };
+    case "weatherRetrievalStatusChange":
+      return {
+        ...state,
+        weatherRetrievalStatus: action.status,
       };
     default:
       return state;

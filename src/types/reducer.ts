@@ -1,11 +1,11 @@
-import { CleanedUpForecastData, SkyTypes } from "./weatherapi";
+import { CleanedUpForecastData, SkyTypes, RetrievalTypes } from "./weatherapi";
 
 export type Store = {
   currentSkies: SkyTypes;
   currentTemp: number;
   submittedCity: string;
   forecast: CleanedUpForecastData;
-  weatherRetrievalStatus: "idle" | "inputHasFocus" | "retrievingData";
+  weatherRetrievalStatus: RetrievalTypes;
   hasError: boolean;
 };
 
@@ -22,4 +22,8 @@ export type ActionObject =
   | {
       type: "submittedCitySet";
       submittedCity: string;
+    }
+  | {
+      type: "weatherRetrievalStatusChange";
+      status: RetrievalTypes;
     };

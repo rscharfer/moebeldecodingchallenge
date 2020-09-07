@@ -17,14 +17,18 @@ import {
 import { INIT_STATE, reducer } from "../utils/reducerUtils";
 import { ORANGE, TEAL } from "../constants/colors";
 
-import useHasMounted from "../hooks/useHasMounted";
+// import useHasMounted from "../hooks/useHasMounted";
 
 function App() {
   const [store, dispatch] = useReducer(reducer, INIT_STATE);
-  const hasMounted = useHasMounted();
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
+
+  // const sendAction => type => payload => ({
+  //   type,
+  //   ...payload
+  // })
 
   const selectCityHandler: (city: string) => void = (city) =>
     dispatch({
@@ -33,21 +37,34 @@ function App() {
     });
 
   const inputFocusHandler = () => {
-    console.log("input focussed!");
+    if (store.weatherRetrievalStatus !== "retrievingData") {
+      dispatch({
+        type: "weatherRetrievalStatusChange",
+        status: "inputHasFocus",
+      });
+    }
   };
 
   const inputBlurHandler = () => {
-    console.log("input blurred!");
+    if (store.weatherRetrievalStatus !== "retrievingData") {
+      dispatch({
+        type: "weatherRetrievalStatusChange",
+        status: "idle",
+      });
+    }
   };
 
   useEffect(() => {
     async function fetchData() {
-      if (hasMounted) {
+      if (store.submittedCity !== "Fake City, USA") {
         try {
+          dispatch({
+            type: "weatherRetrievalStatusChange",
+            status: "retrievingData",
+          });
           const currentProm = axios.get(
             createCurrentWeatherUrl(store.submittedCity)
           );
-
           const forecastProm = axios.get(createForcastUrl(store.submittedCity));
 
           // const timeLimit = () => new Promise((res, rej) => setTimeout(rej, 3000))
@@ -72,7 +89,7 @@ function App() {
       }
     }
     fetchData();
-  }, [hasMounted, store.submittedCity]);
+  }, [store.submittedCity]);
 
   const { currentTemp, currentSkies, submittedCity, forecast } = store;
 
