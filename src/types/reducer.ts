@@ -27,3 +27,9 @@ export type ActionObject =
       type: "weatherRetrievalStatusChange";
       status: RetrievalTypes;
     };
+
+export type ActionTypes =
+  | "dataRetrievalSuccessful"
+  | "dataRetrievalFailed"
+  | "submittedCitySet"
+  | "weatherRetrievalStatusChange";

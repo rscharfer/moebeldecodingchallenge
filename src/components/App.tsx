@@ -7,6 +7,8 @@ import CurrentConditions from "./CurrentConditions";
 import InputContainer from "./InputContainer";
 import List from "./List";
 
+import { ActionTypes, ActionObject } from "../types/reducer";
+
 import {
   cleanUpCurrentWeatherData,
   cleanUpForecastData,
@@ -25,10 +27,13 @@ function App() {
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
-  // const sendAction => type => payload => ({
-  //   type,
-  //   ...payload
-  // })
+  const sendAction = (type: ActionTypes) => (payload: {
+    [prop: string]: any;
+  }) => {
+    dispatch({ type, ...payload } as ActionObject);
+  };
+
+  const sendRetrievalAction = sendAction("weatherRetrievalStatusChange");
 
   const selectCityHandler: (city: string) => void = (city) =>
     dispatch({
@@ -38,19 +43,13 @@ function App() {
 
   const inputFocusHandler = () => {
     if (store.weatherRetrievalStatus !== "retrievingData") {
-      dispatch({
-        type: "weatherRetrievalStatusChange",
-        status: "inputHasFocus",
-      });
+      sendRetrievalAction({ status: "inputHasFocus" });
     }
   };
 
   const inputBlurHandler = () => {
     if (store.weatherRetrievalStatus !== "retrievingData") {
-      dispatch({
-        type: "weatherRetrievalStatusChange",
-        status: "idle",
-      });
+      sendRetrievalAction({ status: "idle" });
     }
   };
 
@@ -58,10 +57,7 @@ function App() {
     async function fetchData() {
       if (store.submittedCity !== "Fake City, USA") {
         try {
-          dispatch({
-            type: "weatherRetrievalStatusChange",
-            status: "retrievingData",
-          });
+          sendRetrievalAction({ status: "retrievingData" });
           const currentProm = axios.get(
             createCurrentWeatherUrl(store.submittedCity)
           );
@@ -91,7 +87,7 @@ function App() {
       }
     }
     fetchData();
-  }, [store.submittedCity]);
+  }, [sendRetrievalAction, store.submittedCity]);
 
   const { currentTemp, currentSkies, submittedCity, forecast } = store;
 
