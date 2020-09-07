@@ -12,15 +12,15 @@ export type OpenWeatherMapForecastData = {
   list: {
     dt: number;
     temp: { day: number };
-    weather: { main: string }[];
+    weather: { main: SkyTypes }[];
   }[];
 };
 export type CleanedUpForecastData = {
   day: string;
   temp: number;
-  skies: string;
+  skies: SkyTypes;
 }[];
 
 export type SkyTypes = "Clouds" | "Clear" | "Rain";
 
-export type RetrievalTypes =  "idle" | "inputHasFocus" | "retrievingData"
+export type RetrievalTypes = "idle" | "inputHasFocus" | "retrievingData";

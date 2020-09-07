@@ -2,11 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import { SkyTypes } from "../types/weatherapi";
-
-import { ReactComponent as Clear } from "../svgs/clear.svg";
-import { ReactComponent as Cloudy } from "../svgs/cloudy.svg";
-import { ReactComponent as Rain } from "../svgs/rain.svg";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
+
+import { skiesMap } from "../utils/weatherUtils";
 
 type CurrentConditionsProps = {
   temp: number;
@@ -14,11 +12,7 @@ type CurrentConditionsProps = {
   skies: SkyTypes;
 };
 
-const skiesMap = {
-  Clouds: Cloudy,
-  Clear: Clear,
-  Rain: Rain,
-};
+
 
 const ConditionsWrapper = styled.div`
   display: flex;

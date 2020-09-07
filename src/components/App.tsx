@@ -75,6 +75,8 @@ function App() {
           const { temp, skies } = cleanUpCurrentWeatherData(current.data);
           const forecastData = cleanUpForecastData(forecast.data);
 
+          console.log(forecastData);
+
           dispatch({
             type: "dataRetrievalSuccessful",
             currentTemp: temp,
