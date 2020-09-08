@@ -58,7 +58,6 @@ function App() {
             getCurrentWeatherData(store.submittedCity),
             getForecastData(store.submittedCity),
           ]);
-
           dispatch({
             type: "dataRetrievalSuccessful",
             currentTemp: current.temp,

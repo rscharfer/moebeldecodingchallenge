@@ -66,7 +66,9 @@ const InputContainer = ({
           id="city"
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => (e.keyCode === 13 ? selectCity(inputValue) : null)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") selectCity(inputValue);
+          }}
           value={inputValue}
           name="stadt"
           autoComplete="off"
