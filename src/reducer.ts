@@ -1,4 +1,4 @@
-import { Store, ActionObject } from "../types/reducer";
+import { Store, ActionObject } from "./types/reducer";
 
 export const INIT_STATE: Store = {
   currentSkies: "Clouds",
@@ -11,9 +11,9 @@ export const INIT_STATE: Store = {
     { day: "Friday", temp: 18.07, skies: "Clear" },
     { day: "Saturday", temp: 21.25, skies: "Rain" },
   ],
-  weatherRetrievalStatus: "idle",
   hasError: false,
-  errorMessage: ''
+  errorMessage: "",
+  hasBlur: false,
 };
 
 export const reducer = (state: Store, action: ActionObject): Store => {
@@ -22,6 +22,7 @@ export const reducer = (state: Store, action: ActionObject): Store => {
       return {
         ...state,
         submittedCity: action.submittedCity,
+        hasBlur: true,
       };
     case "dataRetrievalSuccessful":
       return {
@@ -29,22 +30,21 @@ export const reducer = (state: Store, action: ActionObject): Store => {
         currentTemp: action.currentTemp,
         currentSkies: action.currentSkies,
         forecast: action.forecast,
-        weatherRetrievalStatus: "idle",
         hasError: false,
-        errorMessage: '',
+        errorMessage: "",
       };
     case "dataRetrievalFailed":
       return {
         ...state,
         hasError: true,
         errorMessage: action.message,
-        weatherRetrievalStatus: "idle",
       };
-    case "weatherRetrievalStatusChange":
+    case "blurChange": {
       return {
         ...state,
-        weatherRetrievalStatus: action.status,
+        hasBlur: action.to === "on" ? true : false,
       };
+    }
     default:
       return state;
   }

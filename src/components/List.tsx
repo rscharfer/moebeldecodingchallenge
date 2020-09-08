@@ -5,7 +5,6 @@ import { ReactComponent as Degree } from "../svgs/degree.svg";
 
 import { skiesMap } from "../utils/weatherUtils";
 
-
 const StyledListItem = styled.li`
   display: flex;
   flex-direction: row;
@@ -83,7 +82,3 @@ const StyledList = styled(List)`
 `;
 
 export default StyledList;
-
-/**content: ${(props) => {
-      return props.weatherRetrievalStatus === "inputHasFocus" ? "yes" : "";
-    }}; */

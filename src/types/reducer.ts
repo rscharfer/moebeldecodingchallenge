@@ -1,13 +1,13 @@
-import { CleanedUpForecastData, SkyTypes, RetrievalTypes } from "./weatherapi";
+import { CleanedUpForecastData, SkyTypes } from "./weatherapi";
 
 export type Store = {
   currentSkies: SkyTypes;
   currentTemp: number;
   submittedCity: string;
   forecast: CleanedUpForecastData;
-  weatherRetrievalStatus: RetrievalTypes;
   hasError: boolean;
   errorMessage: string;
+  hasBlur: boolean;
 };
 
 export type ActionObject =
@@ -19,19 +19,18 @@ export type ActionObject =
     }
   | {
       type: "dataRetrievalFailed";
-      message: string
+      message: string;
     }
   | {
       type: "submittedCitySet";
       submittedCity: string;
     }
   | {
-      type: "weatherRetrievalStatusChange";
-      status: RetrievalTypes;
+      type: "blurChange";
+      to: "on" | "off";
     };
 
 export type ActionTypes =
   | "dataRetrievalSuccessful"
   | "dataRetrievalFailed"
-  | "submittedCitySet"
-  | "weatherRetrievalStatusChange";
+  | "submittedCitySet";

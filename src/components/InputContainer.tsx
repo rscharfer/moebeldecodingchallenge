@@ -4,11 +4,10 @@ import styled from "styled-components";
 import { ReactComponent as RightArrow } from "../svgs/next.svg";
 
 type InputContainerProps = {
-  selectCity: (prop: string) => void;
+  selectCity: (city: string) => void;
   labelText: string;
   className: string;
-  focusHandler: () => void;
-  blurHandler: () => void;
+  refNode: any;
 };
 
 const StyledInput = styled.input`
@@ -53,25 +52,29 @@ const InputContainer = ({
   selectCity,
   labelText,
   className,
-  focusHandler,
-  blurHandler,
+  // focusHandler,
+  // blurHandler,
+  refNode,
 }: InputContainerProps) => {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div className={className} onFocus={focusHandler} onBlur={blurHandler}>
+    <div className={className}>
       <StyledLabel htmlFor="city">{labelText}</StyledLabel>
-      <StyledDiv>
+      <StyledDiv ref={refNode}>
         <StyledInput
           id="city"
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => (e.keyCode === 13 ? selectCity(inputValue) : null)}
           value={inputValue}
+          name="stadt"
+          autoComplete="off"
         />
         <StyledSubmit
           height="30"
           onClick={(event) => {
-            console.log("click");
+            event.preventDefault();
             selectCity(inputValue);
           }}
         />

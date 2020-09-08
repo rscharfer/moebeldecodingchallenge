@@ -22,5 +22,3 @@ export type CleanedUpForecastData = {
 }[];
 
 export type SkyTypes = "Clouds" | "Clear" | "Rain";
-
-export type RetrievalTypes = "idle" | "inputHasFocus" | "retrievingData";
