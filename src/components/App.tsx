@@ -11,10 +11,17 @@ import ErrorMessage from "./Error";
 import { getCurrentWeatherData, getForecastData } from "../utils/weatherUtils";
 
 import { INIT_STATE, reducer } from "../reducer";
+
 import { ORANGE, TEAL } from "../constants/colors";
 
 type ModalContainerProps = {
   hasBlur: boolean;
+};
+
+const hasAncestor = (node: Node, maybeAncestorNode: Node): boolean => {
+  if (node.parentNode === null) return false;
+  else if (node.parentNode === maybeAncestorNode) return true;
+  else return hasAncestor(node.parentNode, maybeAncestorNode);
 };
 
 const ModalContainer = styled.div<ModalContainerProps>`
@@ -37,13 +44,7 @@ function App() {
   };
 
   const appClickHandler = (event: any) => {
-    const parentOfClickedNode = event.target.parentNode;
-    const container = inputContainer.current;
-    // I know ... this is nasty... would love suggestions
-    if (
-      parentOfClickedNode === container ||
-      parentOfClickedNode.parentNode === container
-    ) {
+    if (hasAncestor(event.target, inputContainer.current as HTMLDivElement)) {
       dispatch({ type: "blurChange", to: "on" });
     } else dispatch({ type: "blurChange", to: "off" });
   };
@@ -95,7 +96,7 @@ function App() {
         />
         <List forecast={forecast} className="" />
       </ModalContainer>
-      {store.hasError && (
+      {store.errorMessage && (
         <ErrorMessage message={store.errorMessage} className="" />
       )}
     </div>

@@ -11,7 +11,6 @@ export const INIT_STATE: Store = {
     { day: "Friday", temp: 18.07, skies: "Clear" },
     { day: "Saturday", temp: 21.25, skies: "Rain" },
   ],
-  hasError: false,
   errorMessage: "",
   hasBlur: false,
 };
@@ -30,13 +29,11 @@ export const reducer = (state: Store, action: ActionObject): Store => {
         currentTemp: action.currentTemp,
         currentSkies: action.currentSkies,
         forecast: action.forecast,
-        hasError: false,
         errorMessage: "",
       };
     case "dataRetrievalFailed":
       return {
         ...state,
-        hasError: true,
         errorMessage: action.message,
       };
     case "blurChange": {

@@ -5,7 +5,6 @@ export type Store = {
   currentTemp: number;
   submittedCity: string;
   forecast: CleanedUpForecastData;
-  hasError: boolean;
   errorMessage: string;
   hasBlur: boolean;
 };
