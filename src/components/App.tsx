@@ -81,6 +81,13 @@ function App() {
   return (
     <div onClick={appClickHandler}>
       <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
+      <div
+        data-testid="justForTesting"
+        data-backgroundcolor={getBackgroundColor(currentTemp)}
+        style={{ display: "none" }}
+      >
+        Way up here
+      </div>
       <Header text="whatweather?" />
       <InputContainer
         refNode={inputContainer}
