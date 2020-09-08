@@ -7,7 +7,11 @@ type ErrorMessageProps = {
 };
 
 const ErrorMessage = ({ message, className }: ErrorMessageProps) => {
-  return <div className={className}>{message}</div>;
+  return (
+    <div
+      className={className}
+    >{`${message} : Will clear with valid request`}</div>
+  );
 };
 
 const StyledErrorMessage = styled(ErrorMessage)`
@@ -26,7 +30,7 @@ const StyledErrorMessage = styled(ErrorMessage)`
   @media (max-width: 768px) {
     font-size: 1rem;
     width: 40%;
-    left: calc(50vw - 20%);
+    left: calc(50vw - 25%);
   }
 `;
 

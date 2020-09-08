@@ -80,13 +80,13 @@ function App() {
   return (
     <div onClick={appClickHandler}>
       <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
+      {/* I apologize for this below in advance - knew of no other way to check background styles */}
       <div
-        data-testid="justForTesting"
+        data-testid="backgroundColorDocumenter"
         data-backgroundcolor={getBackgroundColor(currentTemp)}
         style={{ display: "none" }}
-      >
-        Way up here
-      </div>
+      />
+
       <Header text="whatweather?" />
       <InputContainer
         refNode={inputContainer}
@@ -94,7 +94,7 @@ function App() {
         selectCity={selectCityHandler}
         className=""
       />
-      <ModalContainer hasBlur={store.hasBlur}>
+      <ModalContainer data-testid="maybeBlurryElement" hasBlur={store.hasBlur}>
         <CurrentConditions
           temp={currentTemp}
           skies={currentSkies}
