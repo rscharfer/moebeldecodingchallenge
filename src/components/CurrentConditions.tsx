@@ -54,8 +54,8 @@ const CurrentConditions = ({
   selectedCity,
   skies,
 }: CurrentConditionsProps) => {
-  // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
 
+  // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
   const SkyComponent = skiesMap[skies] || FallbackIcon;
 
   return (

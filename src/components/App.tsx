@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 
 import GlobalStyle from "./GlobalStyle";
@@ -7,10 +7,14 @@ import CurrentConditions from "./CurrentConditions";
 import InputContainer from "./InputContainer";
 import List from "./List";
 import ErrorMessage from "./Error";
+import { useFetcher } from "../hooks/useFetcher";
 
-import { getCurrentWeatherData, getForecastData } from "../utils/weatherUtils";
-
-import { INIT_STATE, reducer } from "../reducer";
+import {
+  createCurrentWeatherUrl,
+  createForcastUrl,
+  cleanUpCurrentWeatherData,
+  cleanUpForecastData,
+} from "../utils/weatherUtils";
 
 import { ORANGE, TEAL } from "../constants/colors";
 
@@ -30,57 +34,47 @@ const ModalContainer = styled.div<ModalContainerProps>`
 `;
 
 function App() {
-  const [store, dispatch] = useReducer(reducer, INIT_STATE);
+  const [submittedCity, setSubmittedCity] = React.useState("Chicago");
+  const [hasBlur, setHasBlur] = React.useState(true);
   const inputContainer = useRef<HTMLDivElement>(null);
+
+  const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
+    { currentTemp: 20, currentSkies: "Clouds" },
+    createCurrentWeatherUrl(submittedCity),
+    cleanUpCurrentWeatherData
+  );
+
+
+  const { temp: currentTemp, skies: currentSkies } = cwData;
+
+  const { status: fstatus, data: forecast, error: ferror } = useFetcher(
+    [
+      { day: "Tuesday", temp: 18.47, skies: "Rain" },
+      { day: "Wednesday", temp: 19.18, skies: "Rain" },
+      { day: "Thursday", temp: 16.41, skies: "Clouds" },
+      { day: "Friday", temp: 18.07, skies: "Clear" },
+      { day: "Saturday", temp: 21.25, skies: "Rain" },
+    ],
+    createForcastUrl(submittedCity),
+    cleanUpForecastData
+  );
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
   const selectCityHandler: (city: string) => void = (city) => {
-    dispatch({
-      type: "submittedCitySet",
-      submittedCity: city,
-    });
+    setSubmittedCity(city);
   };
 
   const appClickHandler = (event: any) => {
     if (hasAncestor(event.target, inputContainer.current as HTMLDivElement)) {
-      dispatch({ type: "blurChange", to: "on" });
-    } else dispatch({ type: "blurChange", to: "off" });
+      setHasBlur(true);
+    } else setHasBlur(false);
   };
-
-  useEffect(() => {
-    async function fetchData() {
-      if (store.submittedCity !== "Fake City, USA") {
-        try {
-          // const timeLimit = () => new Promise((res, rej) => setTimeout(rej, 3000))
-          const [current, forecast] = await Promise.all([
-            getCurrentWeatherData(store.submittedCity),
-            getForecastData(store.submittedCity),
-          ]);
-          dispatch({
-            type: "dataRetrievalSuccessful",
-            currentTemp: current.temp,
-            currentSkies: current.skies,
-            forecast,
-          });
-        } catch (e) {
-          dispatch({
-            type: "dataRetrievalFailed",
-            message: e.message,
-          });
-        }
-      }
-    }
-    fetchData();
-  }, [store.submittedCity]);
-
-  const { currentTemp, currentSkies, submittedCity, forecast } = store;
 
   return (
     <div onClick={appClickHandler}>
       <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
-      {/* I apologize for this below in advance - knew of no other way to check background styles */}
       <div
         data-testid="backgroundColorDocumenter"
         data-backgroundcolor={getBackgroundColor(currentTemp)}
@@ -94,7 +88,7 @@ function App() {
         selectCity={selectCityHandler}
         className=""
       />
-      <ModalContainer data-testid="maybeBlurryElement" hasBlur={store.hasBlur}>
+      <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
         <CurrentConditions
           temp={currentTemp}
           skies={currentSkies}
@@ -102,9 +96,7 @@ function App() {
         />
         <List forecast={forecast} className="" />
       </ModalContainer>
-      {store.errorMessage && (
-        <ErrorMessage message={store.errorMessage} className="" />
-      )}
+      {ferror && <ErrorMessage message={ferror.message} className="" />}
     </div>
   );
 }

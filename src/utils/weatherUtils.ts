@@ -17,7 +17,7 @@ export const skiesMap = {
   Rain: Rain,
 };
 
-const cleanUpCurrentWeatherData = (
+export const cleanUpCurrentWeatherData = (
   obj: OpenWeatherMapCurrentData
 ): CleanedUpCurrentData => {
   const temp = obj.main.temp;
@@ -40,7 +40,7 @@ const dayMapper: {
   6: "Saturday",
 };
 
-const cleanUpForecastData = (
+export const cleanUpForecastData = (
   obj: OpenWeatherMapForecastData
 ): CleanedUpForecastData => {
   return obj.list
@@ -57,9 +57,9 @@ const cleanUpForecastData = (
     .slice(1);
 };
 
-const createCurrentWeatherUrl = (submittedCity: string) =>
+export const createCurrentWeatherUrl = (submittedCity: string) =>
   `https://api.openweathermap.org/data/2.5/weather?q=${submittedCity}&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`;
-const createForcastUrl = (submittedCity: string) =>
+export const createForcastUrl = (submittedCity: string) =>
   `https://api.openweathermap.org/data/2.5/forecast/daily?q=${submittedCity}&cnt=6&appid=${process.env.REACT_APP_WEATHER_APP_API_TOKEN}&units=metric`;
 
 export const getForecastData = async (city: string) => {
