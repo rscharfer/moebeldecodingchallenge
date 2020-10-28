@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { SkyTypes } from "../types/weatherapi";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
+import { ReactComponent as FallbackIcon } from "../svgs/clear.svg";
 
 import { skiesMap } from "../utils/weatherUtils";
 
@@ -53,7 +54,9 @@ const CurrentConditions = ({
   selectedCity,
   skies,
 }: CurrentConditionsProps) => {
-  const SkyComponent = skiesMap[skies];
+  // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
+
+  const SkyComponent = skiesMap[skies] || FallbackIcon;
 
   return (
     <Wrapper>
