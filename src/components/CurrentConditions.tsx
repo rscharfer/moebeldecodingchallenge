@@ -59,7 +59,7 @@ const CurrentConditions = ({
   submittedCity,
   onTempChange,
 }: CurrentConditionsProps) => {
-  const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
+  const { status: cwStatus, data: cwData } = useFetcher(
     { currentTemp: 20, currentSkies: "Clouds" },
     createCurrentWeatherUrl(submittedCity),
     cleanUpCurrentWeatherData

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import {
-  CleanedUpForecastData,
   CleanedUpForcastDay,
 } from "../types/weatherapi";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
@@ -47,7 +46,7 @@ type ListProps = {
 };
 
 const List = ({ submittedCity, className }: ListProps) => {
-  const { status: fstatus, data: forecast, error: ferror } = useFetcher(
+  const { status: fstatus, data: forecast } = useFetcher(
     [
       { day: "Tuesday", temp: 18.47, skies: "Rain" },
       { day: "Wednesday", temp: 19.18, skies: "Rain" },
