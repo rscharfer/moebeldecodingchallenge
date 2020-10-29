@@ -22,7 +22,10 @@ const StyledErrorMessage = styled.div`
   }
 `;
 
-const ErrorMessage = ({ error, resetErrorBoundary }: FallbackProps) => {
+const ErrorMessage: React.FC<FallbackProps> = ({
+  error,
+  resetErrorBoundary,
+}) => {
   return (
     <StyledErrorMessage role="alert">
       <code>{error?.message}</code>
@@ -34,7 +37,7 @@ const ErrorMessage = ({ error, resetErrorBoundary }: FallbackProps) => {
           backgroundColor: "white",
           color: "tomato",
           fontFamily: "monospace",
-          cursor: 'pointer'
+          cursor: "pointer",
         }}
         onClick={resetErrorBoundary}
       >
