@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { ErrorBoundary } from "react-error-boundary";
 
 import GlobalStyle from "./GlobalStyle";
 import Header from "./Header";
@@ -33,7 +34,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
 
 function App() {
   const [submittedCity, setSubmittedCity] = React.useState("Chicago");
-  const [hasBlur, setHasBlur] = React.useState(true);
+  const [hasBlur, setHasBlur] = React.useState(false);
   const inputContainer = useRef<HTMLDivElement>(null);
 
   const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
@@ -41,12 +42,8 @@ function App() {
     createCurrentWeatherUrl(submittedCity),
     cleanUpCurrentWeatherData
   );
-    
+
   const { currentTemp, currentSkies } = cwData;
-
-
-
-
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
@@ -63,29 +60,34 @@ function App() {
 
   return (
     <div onClick={appClickHandler}>
-      <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
-      <div
-        data-testid="backgroundColorDocumenter"
-        data-backgroundcolor={getBackgroundColor(currentTemp)}
-        style={{ display: "none" }}
-      />
-
-      <Header text="whatweather?" />
-      <InputContainer
-        refNode={inputContainer}
-        labelText="Type in your location and we will tell you what weather to expect"
-        selectCity={selectCityHandler}
-        className=""
-      />
-      <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
-        <CurrentConditions
-          temp={currentTemp}
-          skies={currentSkies}
-          selectedCity={submittedCity}
+      <ErrorBoundary
+        onReset={() => setSubmittedCity('Chicago')}
+        FallbackComponent={ErrorMessage}
+      >
+        <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
+        <div
+          data-testid="backgroundColorDocumenter"
+          data-backgroundcolor={getBackgroundColor(currentTemp)}
+          style={{ display: "none" }}
         />
-        <List submittedCity={submittedCity} className="" />
-      </ModalContainer>
-      {/* {ferror && <ErrorMessage message={ferror.message} className="" />} */}
+
+        <Header text="whatweather?" />
+        <InputContainer
+          refNode={inputContainer}
+          labelText="Type in your location and we will tell you what weather to expect"
+          selectCity={selectCityHandler}
+          className=""
+        />
+        <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
+          <CurrentConditions
+            temp={currentTemp}
+            skies={currentSkies}
+            selectedCity={submittedCity}
+          />
+          <List submittedCity={submittedCity} className="" />
+        </ModalContainer>
+        {/* {ferror && <ErrorMessage message={ferror.message} className="" />} */}
+      </ErrorBoundary>
     </div>
   );
 }

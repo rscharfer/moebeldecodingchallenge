@@ -59,7 +59,11 @@ const List = ({ submittedCity, className }: ListProps) => {
     cleanUpForecastData
   );
 
-  if (fstatus === 'rejected') console.log('oh crap! something bad happened', ferror.message);
+  if (fstatus === "rejected") {
+    throw new Error(
+      `There is no data for the city ${submittedCity}. Click reset and enter a new city.`
+    );
+  }
 
   return (
     <ul className={className}>

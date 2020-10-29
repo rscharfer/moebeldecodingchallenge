@@ -1,20 +1,8 @@
 import React from "react";
+import { FallbackProps } from "react-error-boundary";
 import styled from "styled-components";
 
-type ErrorMessageProps = {
-  message: string;
-  className: string;
-};
-
-const ErrorMessage = ({ message, className }: ErrorMessageProps) => {
-  return (
-    <div
-      className={className}
-    >{`${message} : Will clear with valid request`}</div>
-  );
-};
-
-const StyledErrorMessage = styled(ErrorMessage)`
+const StyledErrorMessage = styled.div`
   text-align: center;
   color: tomato;
   background-color: white;
@@ -34,4 +22,26 @@ const StyledErrorMessage = styled(ErrorMessage)`
   }
 `;
 
-export default StyledErrorMessage;
+const ErrorMessage = ({ error, resetErrorBoundary }: FallbackProps) => {
+  return (
+    <StyledErrorMessage role="alert">
+      <code>{error?.message}</code>
+      <button
+        style={{
+          border: "2px solid tomato",
+          borderRadius: "4px",
+          lineHeight: "20px",
+          backgroundColor: "white",
+          color: "tomato",
+          fontFamily: "monospace",
+          cursor: 'pointer'
+        }}
+        onClick={resetErrorBoundary}
+      >
+        Reset
+      </button>
+    </StyledErrorMessage>
+  );
+};
+
+export default ErrorMessage;
