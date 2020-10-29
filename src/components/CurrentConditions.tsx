@@ -66,7 +66,6 @@ const CurrentConditions = ({
   );
 
   const { currentTemp, currentSkies }: CleanedUpCurrentData = cwData;
-  onTempChange(currentTemp);
   // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
   const SkyComponent = skiesMap[currentSkies] || FallbackIcon;
 
@@ -74,6 +73,10 @@ const CurrentConditions = ({
     throw Error(
       `There is no current weather data for the city ${submittedCity}`
     );
+
+  React.useEffect(() => {
+    onTempChange(currentTemp);
+  }, [currentTemp, onTempChange]);
 
   return (
     <Wrapper>

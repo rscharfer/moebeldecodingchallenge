@@ -32,6 +32,11 @@ function App() {
   const [currentTemp, setCurrentTemp] = React.useState(15);
   const inputContainer = useRef<HTMLDivElement>(null);
 
+  const memoizedSetCurrentTemp = React.useCallback(
+    (temp) => setCurrentTemp(temp),
+    [setCurrentTemp]
+  );
+
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
@@ -67,7 +72,7 @@ function App() {
         />
         <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
           <CurrentConditions
-            onTempChange={(temp) => setCurrentTemp(temp)}
+            onTempChange={memoizedSetCurrentTemp}
             submittedCity={submittedCity}
           />
           <List submittedCity={submittedCity} className="" />
