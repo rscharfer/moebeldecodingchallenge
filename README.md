@@ -38,8 +38,8 @@ Font: <https://fonts.google.com/specimen/Roboto?query=roboto>
 - [ ] Create a component for listing weekly weather forecast
 - [ ] Wire that component with the api
 
-
 ## To test
+
 - clone repo
 - cd into folder and `npm install`
 - `npm run build`
