@@ -37,3 +37,10 @@ Font: <https://fonts.google.com/specimen/Roboto?query=roboto>
 - [ ] Wire city input with the api
 - [ ] Create a component for listing weekly weather forecast
 - [ ] Wire that component with the api
+
+
+## To test
+- clone repo
+- cd into folder and `npm install`
+- `npm run build`
+- open browser at given port
