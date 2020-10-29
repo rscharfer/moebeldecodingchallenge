@@ -8,12 +8,6 @@ import CurrentConditions from "./CurrentConditions";
 import InputContainer from "./InputContainer";
 import List from "./List";
 import ErrorMessage from "./Error";
-import { useFetcher } from "../hooks/useFetcher";
-
-import {
-  createCurrentWeatherUrl,
-  cleanUpCurrentWeatherData,
-} from "../utils/weatherUtils";
 
 import { ORANGE, TEAL } from "../constants/colors";
 
@@ -35,15 +29,8 @@ const ModalContainer = styled.div<ModalContainerProps>`
 function App() {
   const [submittedCity, setSubmittedCity] = React.useState("Chicago");
   const [hasBlur, setHasBlur] = React.useState(false);
+  const [setCurrentTemp, currentTemp] = React.useState(15);
   const inputContainer = useRef<HTMLDivElement>(null);
-
-  const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
-    { currentTemp: 20, currentSkies: "Clouds" },
-    createCurrentWeatherUrl(submittedCity),
-    cleanUpCurrentWeatherData
-  );
-
-  const { currentTemp, currentSkies } = cwData;
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
@@ -61,7 +48,7 @@ function App() {
   return (
     <div onClick={appClickHandler}>
       <ErrorBoundary
-        onReset={() => setSubmittedCity('Chicago')}
+        onReset={() => setSubmittedCity("Chicago")}
         FallbackComponent={ErrorMessage}
       >
         <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
@@ -80,13 +67,11 @@ function App() {
         />
         <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
           <CurrentConditions
-            temp={currentTemp}
-            skies={currentSkies}
-            selectedCity={submittedCity}
+            onTempChange={(temp) => setCurrentTemp(temp)}
+            submittedCity={submittedCity}
           />
           <List submittedCity={submittedCity} className="" />
         </ModalContainer>
-        {/* {ferror && <ErrorMessage message={ferror.message} className="" />} */}
       </ErrorBoundary>
     </div>
   );

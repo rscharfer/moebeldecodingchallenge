@@ -1,16 +1,22 @@
 import React from "react";
 import styled from "styled-components";
 
-import { SkyTypes } from "../types/weatherapi";
+import { useFetcher } from "../hooks/useFetcher";
+
+import {
+  createCurrentWeatherUrl,
+  cleanUpCurrentWeatherData,
+} from "../utils/weatherUtils";
+
+import { CleanedUpCurrentData } from "../types/weatherapi";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
 import { ReactComponent as FallbackIcon } from "../svgs/clear.svg";
 
 import { skiesMap } from "../utils/weatherUtils";
 
 type CurrentConditionsProps = {
-  temp: number;
-  selectedCity: string;
-  skies: SkyTypes;
+  submittedCity: string;
+  setCurrentTemp: (temp: number) => void;
 };
 
 const ConditionsWrapper = styled.div`
@@ -50,24 +56,35 @@ const SelectedCityWrapper = styled.div`
 `;
 
 const CurrentConditions = ({
-  temp,
-  selectedCity,
-  skies,
+  submittedCity,
+  setCurrentTemp,
 }: CurrentConditionsProps) => {
+  const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
+    { currentTemp: 20, currentSkies: "Clouds" },
+    createCurrentWeatherUrl(submittedCity),
+    cleanUpCurrentWeatherData
+  );
 
+  const { currentTemp, currentSkies }: CleanedUpCurrentData = cwData;
+  setCurrentTemp(currentTemp);
   // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
-  const SkyComponent = skiesMap[skies] || FallbackIcon;
+  const SkyComponent = skiesMap[currentSkies] || FallbackIcon;
+
+  if (cwStatus === "rejected")
+    throw Error(
+      `There is no current weather data for the city ${submittedCity}`
+    );
 
   return (
     <Wrapper>
       <SelectedCityWrapper>
-        Weather for: {selectedCity || "No city given"}
+        Weather for: {submittedCity || "No city given"}
       </SelectedCityWrapper>
       <ConditionsWrapper>
         <SkyWrapper>
           <SkyComponent height={60} />
         </SkyWrapper>
-        <NumberWrapper>{Math.round(temp)}</NumberWrapper>
+        <NumberWrapper>{Math.round(currentTemp)}</NumberWrapper>
         <DegreeWrapper>
           <Degree height={200} />
         </DegreeWrapper>
