@@ -20,19 +20,19 @@ const ModalContainer = styled.div<ModalContainerProps>`
   filter: blur(${({ hasBlur }) => (hasBlur ? "5px" : "0")});
 `;
 
+const getBackgroundGradient = (temp: number): string =>
+  temp < 15 ? TEAL : ORANGE;
+
 function App() {
   const [submittedCity, setSubmittedCity] = React.useState("Chicago");
   const [hasBlur, setHasBlur] = React.useState(false);
   const [currentTemp, setCurrentTemp] = React.useState(15);
-  const input = useRef<HTMLDivElement>(null).current;
+  const input = useRef<HTMLDivElement>(null!).current;
 
   const memoizedSetCurrentTemp = React.useCallback(
     (temp) => setCurrentTemp(temp),
     [setCurrentTemp]
   );
-
-  const getBackgroundGradient = (temp: number): string =>
-    temp < 15 ? TEAL : ORANGE;
 
   const selectCityHandler = (city: string) => {
     setSubmittedCity(city);
