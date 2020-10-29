@@ -6,7 +6,6 @@ import { ReactComponent as RightArrow } from "../svgs/next.svg";
 type InputContainerProps = {
   selectCity: (city: string) => void;
   labelText: string;
-  className: string;
   refNode: any;
 };
 
@@ -51,15 +50,12 @@ const StyledLabel = styled.label`
 const InputContainer = ({
   selectCity,
   labelText,
-  className,
-  // focusHandler,
-  // blurHandler,
   refNode,
 }: InputContainerProps) => {
   const [inputValue, setInputValue] = useState("");
 
   return (
-    <div className={className}>
+    <Wrapper>
       <StyledLabel htmlFor="city">{labelText}</StyledLabel>
       <StyledDiv ref={refNode}>
         <StyledInput
@@ -81,13 +77,13 @@ const InputContainer = ({
           }}
         />
       </StyledDiv>
-    </div>
+    </Wrapper>
   );
 };
 
-const StyledDefault = styled(InputContainer)`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export default StyledDefault;
+export default InputContainer;

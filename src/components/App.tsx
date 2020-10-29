@@ -68,7 +68,6 @@ function App() {
           refNode={inputContainer}
           labelText="Type in your location and we will tell you what weather to expect"
           selectCity={selectCityHandler}
-          className=""
         />
         <ModalContainer data-testid="maybeBlurryElement" hasBlur={hasBlur}>
           <CurrentConditions
