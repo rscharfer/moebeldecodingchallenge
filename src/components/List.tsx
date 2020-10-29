@@ -1,9 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { CleanedUpForecastData } from "../types/weatherapi";
+import {
+  CleanedUpForecastData,
+  CleanedUpForcastDay,
+} from "../types/weatherapi";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
+import { createForcastUrl, cleanUpForecastData } from "../utils/weatherUtils";
 
 import { skiesMap } from "../utils/weatherUtils";
+import { useFetcher } from "../hooks/useFetcher";
 
 const StyledListItem = styled.li`
   display: flex;
@@ -37,33 +42,49 @@ const StyledWeatherIcon = styled.span`
 `;
 
 type ListProps = {
-  forecast: CleanedUpForecastData;
+  submittedCity: string;
   className: string;
 };
 
-const List = ({ forecast, className }: ListProps) => (
-  <ul className={className}>
-    {forecast.map((day) => {
-      const WeatherIcon = skiesMap[day.skies];
-      return (
-        <StyledListItem key={day.day}>
-          <StyledDay>{day.day}</StyledDay>
-          <StyledTempAndSkies>
-            <StyledDegreesGroup>
-              <span>{Math.round(day.temp)}</span>
-              <StyledDegrees>
-                <Degree height="60px" />
-              </StyledDegrees>
-            </StyledDegreesGroup>
-            <StyledWeatherIcon>
-              <WeatherIcon height="40px" />
-            </StyledWeatherIcon>
-          </StyledTempAndSkies>
-        </StyledListItem>
-      );
-    })}
-  </ul>
-);
+const List = ({ submittedCity, className }: ListProps) => {
+  const { status: fstatus, data: forecast, error: ferror } = useFetcher(
+    [
+      { day: "Tuesday", temp: 18.47, skies: "Rain" },
+      { day: "Wednesday", temp: 19.18, skies: "Rain" },
+      { day: "Thursday", temp: 16.41, skies: "Clouds" },
+      { day: "Friday", temp: 18.07, skies: "Clear" },
+      { day: "Saturday", temp: 21.25, skies: "Rain" },
+    ],
+    createForcastUrl(submittedCity),
+    cleanUpForecastData
+  );
+
+  if (fstatus === 'rejected') console.log('oh crap! something bad happened', ferror.message);
+
+  return (
+    <ul className={className}>
+      {forecast.map((day: CleanedUpForcastDay) => {
+        const WeatherIcon = skiesMap[day.skies];
+        return (
+          <StyledListItem key={day.day}>
+            <StyledDay>{day.day}</StyledDay>
+            <StyledTempAndSkies>
+              <StyledDegreesGroup>
+                <span>{Math.round(day.temp)}</span>
+                <StyledDegrees>
+                  <Degree height="60px" />
+                </StyledDegrees>
+              </StyledDegreesGroup>
+              <StyledWeatherIcon>
+                <WeatherIcon height="40px" />
+              </StyledWeatherIcon>
+            </StyledTempAndSkies>
+          </StyledListItem>
+        );
+      })}
+    </ul>
+  );
+};
 
 const StyledList = styled(List)`
   margin: 1rem auto;

@@ -20,11 +20,11 @@ export const skiesMap = {
 export const cleanUpCurrentWeatherData = (
   obj: OpenWeatherMapCurrentData
 ): CleanedUpCurrentData => {
-  const temp = obj.main.temp;
-  const skies = obj.weather[0].main;
+  const currentTemp = obj.main.temp;
+  const currentSkies = obj.weather[0].main;
   return {
-    temp,
-    skies,
+    currentTemp,
+    currentSkies,
   };
 };
 

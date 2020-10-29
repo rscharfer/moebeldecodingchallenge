@@ -4,8 +4,8 @@ export type OpenWeatherMapCurrentData = {
 };
 
 export type CleanedUpCurrentData = {
-  temp: number;
-  skies: SkyTypes;
+  currentTemp: number;
+  currentSkies: SkyTypes;
 };
 
 export type OpenWeatherMapForecastData = {
@@ -15,10 +15,12 @@ export type OpenWeatherMapForecastData = {
     weather: { main: SkyTypes }[];
   }[];
 };
-export type CleanedUpForecastData = {
+export type CleanedUpForecastData = CleanedUpForcastDay[];
+
+export type CleanedUpForcastDay = {
   day: string;
   temp: number;
   skies: SkyTypes;
-}[];
+};
 
 export type SkyTypes = "Clouds" | "Clear" | "Rain";

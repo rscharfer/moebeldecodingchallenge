@@ -11,9 +11,7 @@ import { useFetcher } from "../hooks/useFetcher";
 
 import {
   createCurrentWeatherUrl,
-  createForcastUrl,
   cleanUpCurrentWeatherData,
-  cleanUpForecastData,
 } from "../utils/weatherUtils";
 
 import { ORANGE, TEAL } from "../constants/colors";
@@ -43,21 +41,12 @@ function App() {
     createCurrentWeatherUrl(submittedCity),
     cleanUpCurrentWeatherData
   );
+    
+  const { currentTemp, currentSkies } = cwData;
 
 
-  const { temp: currentTemp, skies: currentSkies } = cwData;
 
-  const { status: fstatus, data: forecast, error: ferror } = useFetcher(
-    [
-      { day: "Tuesday", temp: 18.47, skies: "Rain" },
-      { day: "Wednesday", temp: 19.18, skies: "Rain" },
-      { day: "Thursday", temp: 16.41, skies: "Clouds" },
-      { day: "Friday", temp: 18.07, skies: "Clear" },
-      { day: "Saturday", temp: 21.25, skies: "Rain" },
-    ],
-    createForcastUrl(submittedCity),
-    cleanUpForecastData
-  );
+
 
   const getBackgroundColor = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
@@ -94,9 +83,9 @@ function App() {
           skies={currentSkies}
           selectedCity={submittedCity}
         />
-        <List forecast={forecast} className="" />
+        <List submittedCity={submittedCity} className="" />
       </ModalContainer>
-      {ferror && <ErrorMessage message={ferror.message} className="" />}
+      {/* {ferror && <ErrorMessage message={ferror.message} className="" />} */}
     </div>
   );
 }

@@ -30,13 +30,22 @@ export function useFetcher(INIT_DATA: any, endpoint: string, cleanUpData: any) {
   useEffect(() => {
     dispatch({ type: "started" });
     axios.get(endpoint).then(
-      ({ data }) => dispatch({ type: "success", data: cleanUpData(data) }),
+      ({ data, status, statusText }) => {
+        if (status === 200 && statusText === "OK")
+          dispatch({ type: "success", data: cleanUpData(data) });
+        else
+          dispatch({
+            type: "error",
+            error: {
+              message: `Not good: status: ${status} statusText: ${statusText}`,
+            },
+          });
+      },
       (error) => {
-        console.log("here is the error", error);
+        dispatch({ type: "error", error });
       }
     );
   }, [cleanUpData, endpoint]);
 
   return state;
 }
-
