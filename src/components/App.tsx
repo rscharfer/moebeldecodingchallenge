@@ -74,7 +74,7 @@ function App() {
             onTempChange={memoizedSetCurrentTemp}
             submittedCity={submittedCity}
           />
-          <List submittedCity={submittedCity} className="" />
+          <List submittedCity={submittedCity} />
         </ModalContainer>
       </ErrorBoundary>
     </div>

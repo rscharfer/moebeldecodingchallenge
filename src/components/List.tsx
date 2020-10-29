@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  CleanedUpForcastDay,
-} from "../types/weatherapi";
+import { CleanedUpForcastDay } from "../types/weatherapi";
 import { ReactComponent as Degree } from "../svgs/degree.svg";
+import { ReactComponent as FallbackIcon } from "../svgs/clear.svg";
+
 import { createForcastUrl, cleanUpForecastData } from "../utils/weatherUtils";
 
 import { skiesMap } from "../utils/weatherUtils";
@@ -42,10 +42,9 @@ const StyledWeatherIcon = styled.span`
 
 type ListProps = {
   submittedCity: string;
-  className: string;
 };
 
-const List = ({ submittedCity, className }: ListProps) => {
+const List = ({ submittedCity }: ListProps) => {
   const { status: fstatus, data: forecast } = useFetcher(
     [
       { day: "Tuesday", temp: 18.47, skies: "Rain" },
@@ -65,9 +64,9 @@ const List = ({ submittedCity, className }: ListProps) => {
   }
 
   return (
-    <ul className={className}>
+    <Wrapper>
       {forecast.map((day: CleanedUpForcastDay) => {
-        const WeatherIcon = skiesMap[day.skies];
+        const WeatherIcon = skiesMap[day.skies] || FallbackIcon;
         return (
           <StyledListItem key={day.day}>
             <StyledDay>{day.day}</StyledDay>
@@ -85,11 +84,11 @@ const List = ({ submittedCity, className }: ListProps) => {
           </StyledListItem>
         );
       })}
-    </ul>
+    </Wrapper>
   );
 };
 
-const StyledList = styled(List)`
+const Wrapper = styled.ul`
   margin: 1rem auto;
   width: 30%;
   min-width: 300px;
@@ -105,4 +104,4 @@ const StyledList = styled(List)`
   }
 `;
 
-export default StyledList;
+export default List;
