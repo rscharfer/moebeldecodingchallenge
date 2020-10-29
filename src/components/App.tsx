@@ -29,7 +29,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
 function App() {
   const [submittedCity, setSubmittedCity] = React.useState("Chicago");
   const [hasBlur, setHasBlur] = React.useState(false);
-  const [setCurrentTemp, currentTemp] = React.useState(15);
+  const [currentTemp, setCurrentTemp] = React.useState(15);
   const inputContainer = useRef<HTMLDivElement>(null);
 
   const getBackgroundColor = (temp: number): string =>

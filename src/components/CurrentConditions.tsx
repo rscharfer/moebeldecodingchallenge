@@ -16,7 +16,7 @@ import { skiesMap } from "../utils/weatherUtils";
 
 type CurrentConditionsProps = {
   submittedCity: string;
-  setCurrentTemp: (temp: number) => void;
+  onTempChange: (temp: number) => void;
 };
 
 const ConditionsWrapper = styled.div`
@@ -57,7 +57,7 @@ const SelectedCityWrapper = styled.div`
 
 const CurrentConditions = ({
   submittedCity,
-  setCurrentTemp,
+  onTempChange,
 }: CurrentConditionsProps) => {
   const { status: cwStatus, data: cwData, error: cwError } = useFetcher(
     { currentTemp: 20, currentSkies: "Clouds" },
@@ -66,7 +66,7 @@ const CurrentConditions = ({
   );
 
   const { currentTemp, currentSkies }: CleanedUpCurrentData = cwData;
-  setCurrentTemp(currentTemp);
+  onTempChange(currentTemp);
   // get the correct SVG component based what the API sends back for "skies" or fallback svg if unhandled skies
   const SkyComponent = skiesMap[currentSkies] || FallbackIcon;
 
