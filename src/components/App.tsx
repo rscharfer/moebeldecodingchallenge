@@ -40,7 +40,7 @@ function App() {
   const getBackgroundGradient = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
-  const selectCityHandler: (city: string) => void = (city) => {
+  const selectCityHandler = (city: string) => {
     setSubmittedCity(city);
   };
 
