@@ -46,16 +46,12 @@ function App() {
   const gradient = getBackgroundGradient(currentTemp);
 
   return (
-    <div
-      onClick={appClickHandler}
-      style={{ background: gradient, height: "100vh", padding: "8px" }}
-    >
+    <Wrapper onClick={appClickHandler} gradient={gradient}>
+      <GlobalStyle />
       <ErrorBoundary
         onReset={() => setSubmittedCity("Chicago")}
         FallbackComponent={ErrorMessage}
       >
-        <GlobalStyle />
-
         <Header text="whatweather?" />
         <InputContainer
           refNode={input}
@@ -70,8 +66,14 @@ function App() {
           <List submittedCity={submittedCity} />
         </ModalContainer>
       </ErrorBoundary>
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div<{ gradient: string }>`
+  background: ${(props) => props.gradient};
+  height: 100vh;
+  padding: 8px;
+`;
 
 export default App;
