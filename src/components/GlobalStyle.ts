@@ -4,7 +4,7 @@ const GlobalStyle = createGlobalStyle`
   html,
   body {
     font-family: Roboto, sans-serif;
-    background: ${(props: { bgColor?: string }) => props.bgColor};
+    margin: 0;
     height: 100%;
     font-size: 18px;
   }

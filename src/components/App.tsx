@@ -37,7 +37,7 @@ function App() {
     [setCurrentTemp]
   );
 
-  const getBackgroundColor = (temp: number): string =>
+  const getBackgroundGradient = (temp: number): string =>
     temp < 15 ? TEAL : ORANGE;
 
   const selectCityHandler: (city: string) => void = (city) => {
@@ -50,18 +50,18 @@ function App() {
     } else setHasBlur(false);
   };
 
+  const gradient = getBackgroundGradient(currentTemp);
+
   return (
-    <div onClick={appClickHandler}>
+    <div
+      onClick={appClickHandler}
+      style={{ background: gradient, height: "100vh", padding: "8px" }}
+    >
       <ErrorBoundary
         onReset={() => setSubmittedCity("Chicago")}
         FallbackComponent={ErrorMessage}
       >
-        <GlobalStyle bgColor={getBackgroundColor(currentTemp)} />
-        <div
-          data-testid="backgroundColorDocumenter"
-          data-backgroundcolor={getBackgroundColor(currentTemp)}
-          style={{ display: "none" }}
-        />
+        <GlobalStyle />
 
         <Header text="whatweather?" />
         <InputContainer
