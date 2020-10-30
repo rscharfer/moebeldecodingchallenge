@@ -34,13 +34,13 @@ const RAW_FORECAST_WEATHER_SUCCESS = {
   },
 };
 
-jest.mock("axios");
+// jest.mock("axios");
 
 describe("<App/>", () => {
   test("app should render without breaking", async () => {
-    axios.get.mockImplementation(() =>
-      Promise.resolve(RAW_CURRENT_WEATHER_RESPONSE_SUCCESS)
-    );
+    // axios.get.mockImplementation(() =>
+    //   Promise.resolve(RAW_CURRENT_WEATHER_RESPONSE_SUCCESS)
+    // );
     // axios.get.mockImplementationOnce(() =>
     //   Promise.resolve(RAW_FORECAST_WEATHER_SUCCESS)
     // );
