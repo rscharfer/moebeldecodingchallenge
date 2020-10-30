@@ -5,6 +5,7 @@ import { setupServer } from "msw/node";
 import { render, waitFor, screen } from "@testing-library/react";
 
 import App from "../components/App";
+import { ORANGE, TEAL } from '../constants/colors';
 
 const RAW_CURRENT_WEATHER_RESPONSE_SUCCESS = {
   main: {
@@ -13,6 +14,17 @@ const RAW_CURRENT_WEATHER_RESPONSE_SUCCESS = {
   weather: [
     {
       main: "Clouds",
+    },
+  ],
+};
+
+const RAW_CURRENT_WEATHER_RESPONSE_SUCCESS_COLD = {
+  main: {
+    temp: 0,
+  },
+  weather: [
+    {
+      main: "Clear",
     },
   ],
 };
@@ -51,5 +63,24 @@ describe("<App/>", () => {
   test("app should fetch weather data and render it to the screen", async () => {
     render(<App />);
     await waitFor(() => screen.getByText("40"));
+    const wrapper = screen.getByTestId('wrapper');
+    expect(wrapper).toHaveAttribute('data-color', ORANGE)
+  });
+  test("app should calculate a ORANGE gradient if weather is warm", async () => {
+    render(<App />);
+    await waitFor(() => screen.getByText("40"));
+    const wrapper = screen.getByTestId('wrapper');
+    expect(wrapper).toHaveAttribute('data-color', ORANGE)
+  });
+  test("app should calculate a TEAL gradient if weather is cold", async () => {
+    server.use(
+      rest.get(current_weather_endpoint, (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json(RAW_CURRENT_WEATHER_RESPONSE_SUCCESS_COLD));
+      })
+    )
+    render(<App />);
+    await waitFor(() => screen.getByText("0"));
+    const wrapper = screen.getByTestId('wrapper');
+    expect(wrapper).toHaveAttribute('data-color', TEAL)
   });
 });

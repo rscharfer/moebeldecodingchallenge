@@ -46,7 +46,7 @@ function App() {
   const gradient = getBackgroundGradient(currentTemp);
 
   return (
-    <Wrapper onClick={appClickHandler} gradient={gradient}>
+    <Wrapper onClick={appClickHandler} data-testid='wrapper' data-color={gradient} gradient={gradient}>
       <GlobalStyle />
       <ErrorBoundary
         onReset={() => setSubmittedCity("Chicago")}
