@@ -29,6 +29,7 @@ export function useFetcher(INIT_DATA: any, endpoint: string, cleanUpData: any) {
 
   useEffect(() => {
     dispatch({ type: "started" });
+ 
     axios.get(endpoint).then(
       ({ data, status, statusText }) => {
         if (status === 200 && statusText === "OK")

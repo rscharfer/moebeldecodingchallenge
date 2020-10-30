@@ -1,128 +1,57 @@
 import React from "react";
+import axios from "axios";
 
-import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-
-import { ORANGE, TEAL } from "../constants/colors.js";
-import weatherUtils from "../utils/weatherUtils";
+import { render } from "@testing-library/react";
 
 import App from "../components/App";
+const RAW_CURRENT_WEATHER_RESPONSE_SUCCESS = {
+  data: {
+    main: {
+      temp: 40,
+    },
+    weather: [
+      {
+        main: "Clouds",
+      },
+    ],
+  },
+  status: 200,
+  statusText: "OK",
+};
 
-jest.mock("../utils/weatherUtils");
+const RAW_FORECAST_WEATHER_SUCCESS = {
+  status: 200,
+  statusText: "OK",
+  data: {
+    list: [
+      { dt: 1604077200, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+      { dt: 1604163600, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+      { dt: 1604250000, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+      { dt: 1604336400, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+      { dt: 1604422800, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+      { dt: 1604509200, temp: { day: 5.2 }, weather: [{ main: "Clouds" }] },
+    ],
+  },
+};
 
-beforeEach(() => {
-  weatherUtils.getCurrentWeatherData.mockResolvedValue({
-    temp: 44,
-    skies: "Clouds",
-  });
-
-  weatherUtils.getForecastData.mockResolvedValue([
-    { day: "Tuesday", temp: 72, skies: "Rain" },
-    { day: "Wednesday", temp: 19.18, skies: "Rain" },
-    { day: "Thursday", temp: 16.41, skies: "Clouds" },
-    { day: "Friday", temp: 18.07, skies: "Clear" },
-    { day: "Saturday", temp: 21.25, skies: "Rain" },
-    { day: "TestDay", temp: 21.25, skies: "Rain" },
-  ]);
-});
+jest.mock("axios");
 
 describe("<App/>", () => {
-  test("app should render without breaking", () => {
-    render(<App />);
-  });
-
-  test("the initial background should be orange", () => {
-    render(<App />);
-    // I apologize for this. :( toHaveStyle() and other alternatives did not seem to work
-    // to check for the background color. And snapshots will just show you something has changed. This will work because the value of the attribute
-    // will stay in sync with the actual background color.  HOW DID YOU DO THIS?
-    const testElement = screen.getByTestId("backgroundColorDocumenter");
-    expect(testElement.getAttribute("data-backgroundcolor")).toBe(ORANGE);
-  });
-
-  test("when a {city} is entered into input and submitted, 'Weather for: {city}' can be seen", () => {
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.type(inputBox, "Hamburg");
-    fireEvent.keyDown(inputBox, { key: "Enter", code: "Enter" });
-    expect(screen.getByText("Weather for: Hamburg")).not.toBeNull();
-  });
-
-  test("the data retrieved from the 'current' API is rendered to the screen", async () => {
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.type(inputBox, "Hamburg");
-    fireEvent.keyDown(inputBox, { key: "Enter", code: "Enter" });
-    const elementWith44 = await screen.findByText("44");
-    expect(elementWith44).toBeInTheDocument();
-  });
-
-  test("the data retrieved from the 'forecast' API is rendered to the screen", async () => {
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.type(inputBox, "Hamburg");
-    fireEvent.keyDown(inputBox, { key: "Enter", code: "Enter" });
-    const elementWith72 = await screen.findByText("72");
-    expect(elementWith72).toBeInTheDocument();
-    const uniqueDayElement = screen.getByText("TestDay");
-    expect(uniqueDayElement).toBeInTheDocument();
-  });
-
-  test("when the current weather is warm, orange background", async () => {
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.type(inputBox, "Hamburg");
-    fireEvent.keyDown(inputBox, { key: "Enter", code: "Enter" });
-    const testElement = await screen.findByTestId("backgroundColorDocumenter");
-    expect(testElement.getAttribute("data-backgroundcolor")).toBe(ORANGE);
-  });
-
-  test("when the current weather is cold, teal background", async () => {
-    // override default with cold weather
-    weatherUtils.getCurrentWeatherData.mockResolvedValue({
-      temp: 10,
-      skies: "Clouds",
-    });
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.type(inputBox, "Hamburg");
-    fireEvent.keyDown(inputBox, { key: "Enter", code: "Enter" });
-    const testElement = await screen.findByTestId("backgroundColorDocumenter");
-    expect(testElement.getAttribute("data-backgroundcolor")).toBe(TEAL);
-  });
-
-  test("there should be a blur when input has focus", async () => {
-    render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.click(inputBox);
-    const possiblyBlurryElement = screen.getByTestId("maybeBlurryElement");
-    expect(window.getComputedStyle(possiblyBlurryElement).filter).toBe(
-      "blur(5px)"
+  test("app should render without breaking", async () => {
+    axios.get.mockImplementation(() =>
+      Promise.resolve(RAW_CURRENT_WEATHER_RESPONSE_SUCCESS)
     );
-  });
+    // axios.get.mockImplementationOnce(() =>
+    //   Promise.resolve(RAW_FORECAST_WEATHER_SUCCESS)
+    // );
 
-  test("lose focus when clicked outside of box", async () => {
+    //   axios.get.mockImplementationOnce(() =>
+    //   Promise.resolve(RAW_FORECAST_WEATHER_SUCCESS)
+    // );
+    // axios.get.mockImplementation(() =>
+    //   Promise.resolve(RAW_CURRENT_WEATHER_RESPONSE_SUCCESS)
+    // );
     render(<App />);
-    const inputBox = screen.getByRole("textbox");
-    userEvent.click(inputBox);
-    userEvent.click(screen.getByText("Tuesday"));
-    const possiblyBlurryElement = screen.getByTestId("maybeBlurryElement");
-    expect(window.getComputedStyle(possiblyBlurryElement).filter).toBe(
-      "blur(0)"
-    );
+    //await wait();
   });
-  // test("app has background color of teal when cold temp is returned from API", async () => {
-  //   render(<App />);
-  //   await userEvent.type(screen.getByRole('textbox'), 'Cold City')
-  //   // mock returns cold current temp
-  //   const body = document.querySelector("body");
-  //   expect(body).toHaveStyle(`background: ${TEAL};`);
-  // });
-  // test("app has background color of orange was warm temp is returned from API", async () => {
-  //   render(<App />);
-  //   await userEvent.type(screen.getByRole('textbox'), 'Warm City')
-  //   // mock returns cold current temp
-  //   const body = document.querySelector("body");
-  //   expect(body).toHaveStyle(`background: ${ORANGE};`);
-  // });
 });
